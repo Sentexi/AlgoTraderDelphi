@@ -108,7 +108,7 @@ if missing_files == []:
 #perform validation
 def incremental_prediction(file_name, models_folder="models"):
     #how many days are we verifying
-    simulation_days = 20
+    simulation_days = 25
     dates = []
     values = []
     values_upper = []
