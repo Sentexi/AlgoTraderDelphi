@@ -1,3 +1,6 @@
+import pandas as pd
+import talib
+
 # Function to create lagged features
 def create_lagged_features(data, ticker, lag_periods):
     for lag in lag_periods:
