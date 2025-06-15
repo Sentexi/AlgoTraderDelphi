@@ -7,7 +7,6 @@ from sklearn.metrics import mean_squared_error
 import talib  # For technical indicators
 from functools import reduce
 import optuna  # For Bayesian optimization
-import matplotlib.pyplot as plt
 import os
 import shutil
 from tqdm import tqdm
@@ -212,16 +211,6 @@ importance_df = pd.DataFrame({
 # Display the feature importance matrix
 print(importance_df)
 
-'''
-# Step 6.5: Plot feature importance
-plt.figure(figsize=(10, 6))
-plt.barh(importance_df['Feature'][:15], importance_df['Importance'][:15], color='skyblue')
-plt.gca().invert_yaxis()
-plt.title('Top 15 Feature Importance')
-plt.xlabel('Importance Score')
-plt.show()
-'''
-
 # Step 6.6: Combine test data with predictions for plotting
 test_data = X_test.copy()
 test_data['target'] = y_test
@@ -230,22 +219,6 @@ test_data['predicted'] = preds
 # Ensure 'datetime' is included and sorted
 test_data['datetime'] = price_data.loc[X_test.index, 'datetime']
 test_data.sort_values(by='datetime', inplace=True)
-
-# Plot the actual vs. predicted values over time
-import matplotlib.pyplot as plt
-
-'''
-# Step 6.7: Plot the actual vs. predicted values over time
-plt.figure(figsize=(12, 6))
-plt.plot(test_data['datetime'], test_data['target'], label='Actual', color='blue', linewidth=0.5)
-plt.plot(test_data['datetime'], test_data['predicted'], label='Predicted', color='red', linewidth=0.5)
-plt.title('Actual vs. Predicted Values Over Time')
-plt.xlabel('Datetime')
-plt.ylabel('Price')
-plt.legend()
-plt.xticks(rotation=45)
-plt.show()
-'''
 
 # Step 7.1: Set up a U.S. stock market calendar
 us_calendar = mcal.get_calendar('NYSE')
@@ -370,20 +343,6 @@ combined_results = pd.concat([
     forecast_results[['datetime', 'target', 'predicted']]
 ], ignore_index=True)
 
-'''
-# Step 2: Plot the Actual vs. Predicted Values Including Forecast
-plt.figure(figsize=(12, 6))
-plt.plot(combined_results['datetime'], combined_results['target'], label='Actual', color='blue', linewidth=0.5)
-plt.plot(combined_results['datetime'], combined_results['predicted'], label='Predicted', color='red', linewidth=0.5)
-plt.title("Actual vs. Predicted Values Including Forecast")
-plt.xlabel("Datetime")
-plt.ylabel("Price")
-plt.legend()
-plt.xticks(rotation=45)
-plt.grid()
-plt.show()
-'''
-
 #R line 409 until 494
 # Step 1: Set the number of simulations for bootstrapping
 num_simulations = 100
@@ -478,20 +437,6 @@ forecast_df = pd.DataFrame({
 # Display the forecast with confidence intervals
 print(forecast_df)
 
-'''
-# Step 5: Plot the Forecast with Confidence Intervals
-plt.figure(figsize=(12, 6))
-plt.plot(forecast_df['datetime'], forecast_df['mean_forecast'], label='Mean Forecast', color='red')
-plt.fill_between(forecast_df['datetime'], forecast_df['lower_bound'], forecast_df['upper_bound'], color='gray', alpha=0.3, label='95% Confidence Interval')
-plt.title("Bootstrapped Forecast with 95% Confidence Interval")
-plt.xlabel("Datetime")
-plt.ylabel("Price")
-plt.legend()
-plt.xticks(rotation=45)
-plt.grid()
-plt.show()
-'''
-
 #R line 496 until 548
 # Step 6.1: Combine Results for Plotting
 forecast_confidence = pd.DataFrame({
@@ -513,25 +458,6 @@ combined_results = pd.concat([
     test_data[['datetime', 'target', 'predicted']],
     forecast_confidence[['datetime', 'predicted']].assign(target=np.nan)
 ], ignore_index=True)
-
-'''
-# Step 6.3: Plot the Forecast with 95% Confidence Intervals
-plt.figure(figsize=(12, 6))
-# Plot actual data
-plt.plot(combined_results['datetime'], combined_results['target'], label='Actual', color='blue', linewidth=0.5)
-# Plot forecasted mean
-plt.plot(forecast_confidence['datetime'], forecast_confidence['predicted'], label='Forecasted Mean', color='red', linewidth=0.5)
-# Plot confidence interval
-plt.fill_between(forecast_confidence['datetime'], forecast_confidence['lower_95'], forecast_confidence['upper_95'], color='green', alpha=0.3, label='95% Confidence Interval')
-
-plt.title("Actual vs. Forecasted Values with 95% Confidence Interval")
-plt.xlabel("Datetime")
-plt.ylabel("Price")
-plt.legend()
-plt.xticks(rotation=45)
-plt.grid()
-plt.show()
-'''
 
 # Step 6.4: Calculate Expected Return Based on Forecast
 # Get the closing price on the last day of historical data
